@@ -1,3 +1,5 @@
+import logging
+
 import torch
 from PIL import Image
 from torchvision.transforms import transforms
@@ -11,7 +13,7 @@ transform = transforms.Compose([
 ])
 
 
-def classify_image(image_path):
+def _classify_image(image_path):
     image = Image.open(image_path)
     image = transform(image)
     image = image.unsqueeze(0)  # Add a batch dimension
@@ -24,4 +26,21 @@ def classify_image(image_path):
     predicted_class = class_names[predicted_idx]
 
     return predicted_class
+
+
+def run_inference(images):
+    logging.info(f"Inference starting")
+    result = []
+    for image_file in images:
+        logging.debug(f"Inference on {image_file}")
+        predicted_class = _classify_image(image_file)
+        result.append({image_file: predicted_class})
+    logging.info(f"Inference over")
+    return result
+
+
+def save_in_file(output_file, inference_result):
+    with open(output_file, "w") as result_file:
+        for entry in inference_result:
+            result_file.write(f"Image: {entry.image_file}, class: {entry.predicted_class}\n")
 
