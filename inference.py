@@ -43,4 +43,4 @@ class Inference:
     def save_in_file(self, output_file):
         with open(output_file, "w") as result_file:
             for entry in self.inference_result:
-                result_file.write(f"image: {entry['image_file']}, class: {entry['predicted_class']}\n")
+                result_file.write(f"image: \"{entry['image_file']}\", class: \"{entry['predicted_class']}\"\n")
