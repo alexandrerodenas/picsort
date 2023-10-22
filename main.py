@@ -1,18 +1,18 @@
+from config_reader import load_config
 from pixel_analysis import PixelAnalysis
 from file_utils import create_directory, write_dataframe_to_csv
 from images_loader import ImageDataLoader
 from logger import setup_logger
 
 if __name__ == '__main__':
-    setup_logger()
+    config = load_config("config.yaml")
+    setup_logger(config.logging_level)
 
-    image_dir = "input"
-    output_dir = "output"
-    create_directory(output_dir)
+    create_directory(config.output_directory)
 
-    dataframe = ImageDataLoader(image_dir).get_dataframe()
-    dataframe = PixelAnalysis().enriched(dataframe)
-    write_dataframe_to_csv(dataframe, output_dir)
+    dataframe = ImageDataLoader(config).get_dataframe()
+    dataframe = PixelAnalysis(config).enriched(dataframe)
+    write_dataframe_to_csv(dataframe, config.output_directory)
 
 
     # inference_result = run_inference(mostly_white_images)

@@ -3,12 +3,14 @@ import os
 import cv2
 import pandas as pd
 
+from config_reader import AppConfig
+
 IMAGE_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.gif', '.bmp')
 
 
 class ImageDataLoader:
-    def __init__(self, image_dir):
-        self.image_dir = image_dir
+    def __init__(self, config: AppConfig):
+        self.config = config
 
     def _create_image_dataframe(self, image_dir):
         image_list = self._get_images_paths(image_dir)
@@ -54,4 +56,4 @@ class ImageDataLoader:
             return None
 
     def get_dataframe(self):
-        return self._create_image_dataframe(self.image_dir)
+        return self._create_image_dataframe(self.config.input_directory)

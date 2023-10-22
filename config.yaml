@@ -1,0 +1,6 @@
+input_directory: "input"
+output_directory: "output"
+logging_level: "INFO"
+pixel_analysis:
+  num_cores: 4
+  blurriness_threshold: 100

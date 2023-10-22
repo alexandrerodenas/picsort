@@ -1,14 +1,18 @@
-import concurrent.futures
 import logging
-from typing import Hashable
 
 import cv2
 import numpy as np
 import pandas as pd
 from joblib import Parallel, delayed
 
+from config_reader import AppConfig
+
 
 class PixelAnalysis:
+
+    def __init__(self, config: AppConfig):
+        self.num_cores = config.pixel_analysis.num_cores
+        self.blurriness_threshold = config.pixel_analysis.blurriness_threshold
 
     @staticmethod
     def _get_white_percentage(image_content):
@@ -28,8 +32,7 @@ class PixelAnalysis:
                 logging.error(f"An exception occurred with {row['path']}: {str(e)}")
                 return None
 
-        num_cores = 4
-        results = Parallel(n_jobs=num_cores)(delayed(process_image)(row) for index, row in images_dataframe.iterrows())
+        results = Parallel(n_jobs=self.num_cores)(delayed(process_image)(row) for index, row in images_dataframe.iterrows())
         pixel_analysis = pd.DataFrame(results, columns=['white', 'blur'])
 
         logging.info("Computing done")
@@ -39,19 +42,11 @@ class PixelAnalysis:
         else:
             logging.warning("White analysis and image DataFrame lengths do not match.")
 
-    @staticmethod
-    def _get_blur_percentage(image_content):
+    def _get_blur_percentage(self, image_content):
         try:
             image = cv2.imdecode(np.frombuffer(image_content, np.uint8), cv2.IMREAD_GRAYSCALE)
             laplacian_var = cv2.Laplacian(image, cv2.CV_64F).var()
-            threshold = 100
-
-            if laplacian_var < threshold:
-                blur_percentage = 100
-            else:
-                blur_percentage = 0
-
-            return blur_percentage
+            return laplacian_var < self.blurriness_threshold
 
         except Exception as e:
             print(f"Error analyzing image: {str(e)}")
