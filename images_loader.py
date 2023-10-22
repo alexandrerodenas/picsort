@@ -42,11 +42,8 @@ class ImageDataLoader:
     @staticmethod
     def _load_image_content(image_path):
         try:
-            # Load the image using OpenCV
             image = cv2.imread(image_path)
-
             if image is not None:
-                # Convert the image to bytes
                 image_content = cv2.imencode('.jpg', image)[1].tobytes()
                 return image_content
             else:

@@ -11,7 +11,7 @@ if __name__ == '__main__':
     create_directory(output_dir)
 
     dataframe = ImageDataLoader(image_dir).get_dataframe()
-    dataframe = PixelAnalysis().enriched_with_white_analysis(dataframe)
+    dataframe = PixelAnalysis().enriched(dataframe)
     write_dataframe_to_csv(dataframe, output_dir)
 
 
