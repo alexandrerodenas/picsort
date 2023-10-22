@@ -1,12 +1,5 @@
 import os
 import shutil
-from shutil import move
-import re
-
-
-def move_images(source_images, target_dir):
-    for image in source_images:
-        move(image, target_dir)
 
 
 def write_dataframe_to_csv(df, output_dir):
@@ -17,12 +10,6 @@ def write_dataframe_to_csv(df, output_dir):
         print(f"DataFrame successfully written to {file_path}")
     except Exception as e:
         print(f"Error writing DataFrame to {file_path}: {str(e)}")
-
-
-def _clean_directory_name(directory_name):
-    # Remove special characters from the directory name
-    cleaned_name = re.sub(r'[^\w\s-]', '', directory_name)
-    return cleaned_name
 
 
 def _delete_directory(directory_path):

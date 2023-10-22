@@ -3,7 +3,7 @@ import os
 import cv2
 import pandas as pd
 
-from config_reader import AppConfig
+from src.shared.config_reader import AppConfig
 
 IMAGE_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.gif', '.bmp')
 

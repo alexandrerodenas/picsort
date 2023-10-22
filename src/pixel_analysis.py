@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 from joblib import Parallel, delayed
 
-from config_reader import AppConfig
+from src.shared.config_reader import AppConfig
 
 
 class PixelAnalysis:

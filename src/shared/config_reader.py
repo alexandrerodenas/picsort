@@ -1,3 +1,5 @@
+import os
+
 import yaml
 from pydantic import BaseModel
 
@@ -15,6 +17,6 @@ class AppConfig(BaseModel):
 
 
 def load_config(file_path):
-    with open(file_path, 'r') as file:
+    with open(os.path.dirname(__file__) + file_path, 'r') as file:
         config_data = yaml.safe_load(file)
     return AppConfig(**config_data)
