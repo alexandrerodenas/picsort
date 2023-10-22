@@ -13,7 +13,7 @@ class PixelAnalysis:
     def _get_white_percentage(image_content):
         image = cv2.imdecode(np.frombuffer(image_content, np.uint8), cv2.IMREAD_GRAYSCALE)
         n_white_pix = np.sum(image == 255)
-        return (n_white_pix / image.size) * 100
+        return int((n_white_pix / image.size) * 100)
 
     def enriched_with_white_analysis(self, images_dataframe):
         logging.info("Computing percentage of white in images")

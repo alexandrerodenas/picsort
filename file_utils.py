@@ -1,4 +1,5 @@
 import os
+import shutil
 from shutil import move
 import re
 
@@ -8,15 +9,14 @@ def move_images(source_images, target_dir):
         move(image, target_dir)
 
 
-def create_output_directories(source_dir):
-    clean_source_dir = _clean_directory_name(source_dir)
-    classification_result_filename = f'output/{clean_source_dir}/classification_results.txt'
-    white_filtering_result_filename = f'output/{clean_source_dir}/white_filtering_results.txt'
-    white_filtered_images_directory = f'output/{clean_source_dir}/whites'
-    _create_directory(f'output/{clean_source_dir}')
-    _create_directory(white_filtered_images_directory)
-
-    return classification_result_filename,white_filtering_result_filename,white_filtered_images_directory
+def write_dataframe_to_csv(df, output_dir):
+    file_path = output_dir + "/dataframe.csv"
+    try:
+        df.drop(columns=['content'], inplace=True)
+        df.to_csv(file_path, index=False)
+        print(f"DataFrame successfully written to {file_path}")
+    except Exception as e:
+        print(f"Error writing DataFrame to {file_path}: {str(e)}")
 
 
 def _clean_directory_name(directory_name):
@@ -25,9 +25,15 @@ def _clean_directory_name(directory_name):
     return cleaned_name
 
 
-def _create_directory(directory_path):
+def _delete_directory(directory_path):
     try:
-        os.makedirs(directory_path)
-        print(f"Directory '{directory_path}' created successfully.")
-    except FileExistsError:
-        print(f"Directory '{directory_path}' already exists.")
+        shutil.rmtree(directory_path)
+        print(f"Directory '{directory_path}' and its contents have been deleted.")
+    except Exception as e:
+        print(f"Error deleting directory '{directory_path}': {str(e)}")
+
+
+def create_directory(directory_path):
+    _delete_directory(directory_path)
+    os.makedirs(directory_path)
+    print(f"Directory '{directory_path}' created successfully.")

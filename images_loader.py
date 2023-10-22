@@ -8,10 +8,9 @@ IMAGE_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.gif', '.bmp')
 
 class ImageDataLoader:
     def __init__(self, image_dir):
-        self.images_dataframe = self._create_image_dataframe(image_dir)
+        self.image_dir = image_dir
 
     def _create_image_dataframe(self, image_dir):
-        logging.info(f"Loading images")
         image_list = self._get_images_paths(image_dir)
 
         # Create an empty DataFrame
@@ -38,8 +37,6 @@ class ImageDataLoader:
                         and not os.path.basename(image_file).lower().startswith("_")):
                     image_path = os.path.join(root, image_file)
                     image_list.append(image_path)
-
-        logging.info(f"Found {len(image_list)} images")
         return image_list
 
     @staticmethod
@@ -60,4 +57,4 @@ class ImageDataLoader:
             return None
 
     def get_dataframe(self):
-        return self.images_dataframe
+        return self._create_image_dataframe(self.image_dir)
