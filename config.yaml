@@ -1,6 +1,6 @@
-input_directory: "input"
-output_directory: "output"
+input_directory: "../input"
+output_directory: "../output"
 logging_level: "INFO"
-pixel_analysis:
-  num_cores: 4
-  blurriness_threshold: 100
+tesseract_path: "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+enrichment_num_cores: 4
+analysis_blurriness_threshold: 100

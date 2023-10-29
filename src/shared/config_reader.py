@@ -4,16 +4,13 @@ import yaml
 from pydantic import BaseModel
 
 
-class PixelAnalysisConfig(BaseModel):
-    num_cores: int
-    blurriness_threshold: int
-
-
 class AppConfig(BaseModel):
     input_directory: str
     output_directory: str
     logging_level: str
-    pixel_analysis: PixelAnalysisConfig
+    tesseract_path: str
+    enrichment_num_cores: int
+    analysis_blurriness_threshold: int
 
 
 def load_config(file_path):
