@@ -1,6 +1,6 @@
 from src.analysis.image_analyzer import SimpleAnalyzer
 from src.dataframe.dataframe_writer import DataFrameWriter
-from src.inference import Inference
+from src.inference.inference import Inference
 from src.shared.config_reader import load_config
 from src.analysis.image_analysis_enricher import ImageAnalysisEnricher
 from images_loader import ImageDataLoader

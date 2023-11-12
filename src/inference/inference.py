@@ -3,7 +3,7 @@ import torch
 import pandas as pd
 from joblib import Parallel, delayed
 
-from src.model import get_model_and_classes, to_image_tensor
+from src.inference.model import get_model_and_classes, to_image_tensor
 from src.shared.dataframe_utils import vertical_concat
 
 
