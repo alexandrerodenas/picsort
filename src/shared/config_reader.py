@@ -9,7 +9,7 @@ class AppConfig(BaseModel):
     output_directory: str
     logging_level: str
     tesseract_path: str
-    enrichment_num_cores: int
+    num_cores: int
     analysis_blurriness_threshold: int
 
 

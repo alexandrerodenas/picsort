@@ -1,4 +1,5 @@
 from src.analysis.image_analyzer import SimpleAnalyzer
+from src.inference import Inference
 from src.shared.config_reader import load_config
 from src.analysis.image_analysis_enricher import ImageAnalysisEnricher
 from images_loader import ImageDataLoader
@@ -14,10 +15,10 @@ if __name__ == '__main__':
     dataframe = ImageDataLoader(config.input_directory).get_dataframe()
     dataframe = ImageAnalysisEnricher(
         SimpleAnalyzer(config.analysis_blurriness_threshold, config.tesseract_path),
-        config.enrichment_num_cores
+        config.num_cores
     ).enrich(dataframe)
+
+    dataframe = Inference(config.num_cores).add_predicted_classes(dataframe)
+
     write_dataframe_to_csv(dataframe, config.output_directory)
 
-    # inference_result = run_inference(mostly_white_images)
-    # inference.save_in_file(inference_result, classification_result_filename)
-    # move_images(mostly_white_images, white_filtered_images_directory)

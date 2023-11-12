@@ -25,16 +25,14 @@ class SimpleAnalyzer(ImageAnalyzer):
         self.blurriness_threshold = blurriness_threshold
         self.tesseract_path = tesseract_path
 
-    def get_white_percentage(self, image_content):
+    def get_white_percentage(self, image_grayscale):
         logging.debug("Computing percentage of white")
-        image = cv2.imdecode(np.frombuffer(image_content, np.uint8), cv2.IMREAD_GRAYSCALE)
-        n_white_pix = np.sum(image == 255)
-        return int((n_white_pix / image.size) * 100)
+        n_white_pix = np.sum(image_grayscale == 255)
+        return int((n_white_pix / image_grayscale.size) * 100)
 
-    def get_blur_level(self, image_content):
+    def get_blur_level(self, image_grayscale):
         try:
-            image = cv2.imdecode(np.frombuffer(image_content, np.uint8), cv2.IMREAD_GRAYSCALE)
-            laplacian_var = cv2.Laplacian(image, cv2.CV_64F).var()
+            laplacian_var = cv2.Laplacian(image_grayscale, cv2.CV_64F).var()
             return int(laplacian_var)
         except Exception as e:
             print(f"Error analyzing image: {str(e)}")

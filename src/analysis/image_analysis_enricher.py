@@ -7,6 +7,8 @@ import pytesseract
 from joblib import Parallel, delayed
 
 from src.analysis.image_analyzer import ImageAnalyzer
+from src.shared.dataframe_utils import vertical_concat
+
 
 class ImageAnalysisEnricher:
 
@@ -16,25 +18,19 @@ class ImageAnalysisEnricher:
 
     def enrich(self, images_dataframe):
         logging.info("Enrichment begins")
-
-        def process_image(row):
-            try:
-                image_content = row['content']
-                white = self.analyzer.get_white_percentage(image_content)
-                blur = self.analyzer.get_blur_level(image_content)
-                text = self.analyzer.get_text(row["path"]) or "None"
-                return white, blur, text
-            except Exception as e:
-                logging.error(f"An exception occurred with {row['path']}: {str(e)}")
-                return None
-
         results = Parallel(n_jobs=self.num_cores)(
-            delayed(process_image)(row) for index, row in images_dataframe.iterrows())
+            delayed(self._process_image)(row) for index, row in images_dataframe.iterrows())
         enrichment = pd.DataFrame(results, columns=['white', 'blur', 'text'])
-
         logging.info("Enrichment done")
+        return vertical_concat(images_dataframe, enrichment)
 
-        if len(results) == len(images_dataframe):
-            return pd.concat([images_dataframe, enrichment], axis=1)
-        else:
-            logging.warning("White analysis and image DataFrame lengths do not match.")
+    def _process_image(self, row):
+        try:
+            image_grayscale = row['grayscale']
+            white = self.analyzer.get_white_percentage(image_grayscale)
+            blur = self.analyzer.get_blur_level(image_grayscale)
+            text = self.analyzer.get_text(row["path"]) or "None"
+            return white, blur, text
+        except Exception as e:
+            logging.error(f"An exception occurred with {row['path']}: {str(e)}")
+            return None

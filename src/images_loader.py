@@ -1,6 +1,7 @@
 import logging
 import os
 import cv2
+import numpy as np
 import pandas as pd
 
 IMAGE_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.gif', '.bmp')
@@ -12,14 +13,13 @@ class ImageDataLoader:
 
     def _create_image_dataframe(self, image_dir):
         image_list = self._get_images_paths(image_dir)
-
-        # Create an empty DataFrame
+        logging.info(f"Looking over {len(image_list)} images")
         df = pd.DataFrame(columns=['path', 'content'])
 
         for image_path in image_list:
-            image_content = self._load_image_content(image_path)
-            if image_content is not None:
-                new_row = {'path': image_path, 'content': image_content}
+            image_content, image_grayscale_encoded = self._read_image_content(image_path)
+            if image_content is not None or image_grayscale_encoded is not None:
+                new_row = {'path': image_path, 'content': image_content, 'grayscale': image_grayscale_encoded}
                 df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
 
         logging.info(f"Loaded {len(df)} images into the DataFrame")
@@ -40,15 +40,11 @@ class ImageDataLoader:
         return image_list
 
     @staticmethod
-    def _load_image_content(image_path):
+    def _read_image_content(image_path):
         try:
-            image = cv2.imread(image_path)
-            if image is not None:
-                image_content = cv2.imencode('.jpg', image)[1].tobytes()
-                return image_content
-            else:
-                logging.error(f"Failed to load image at {image_path}")
-                return None
+            image_content = cv2.imread(image_path)
+            image_grayscale_encoded = cv2.cvtColor(image_content, cv2.COLOR_BGR2GRAY)
+            return image_content, image_grayscale_encoded
         except Exception as e:
             logging.error(f"Error loading image {image_path}: {str(e)}")
             return None
