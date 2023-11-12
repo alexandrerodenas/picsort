@@ -1,9 +1,10 @@
 from src.analysis.image_analyzer import SimpleAnalyzer
+from src.dataframe.dataframe_writer import DataFrameWriter
 from src.inference import Inference
 from src.shared.config_reader import load_config
 from src.analysis.image_analysis_enricher import ImageAnalysisEnricher
 from images_loader import ImageDataLoader
-from src.shared.file_utils import create_directory, write_dataframe_to_csv
+from src.shared.file_utils import create_directory
 from src.shared.logger import setup_logger
 
 if __name__ == '__main__':
@@ -20,5 +21,8 @@ if __name__ == '__main__':
 
     dataframe = Inference(config.num_cores).add_predicted_classes(dataframe)
 
-    write_dataframe_to_csv(dataframe, config.output_directory)
+    DataFrameWriter(
+        dataframe,
+        config.ignored_columns_in_output
+    ).write_dataframe_to_csv(config.output_directory)
 

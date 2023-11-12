@@ -4,3 +4,4 @@ logging_level: "INFO"
 tesseract_path: "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 num_cores: 4
 analysis_blurriness_threshold: 100
+ignored_columns_in_output: ["content", "grayscale"]

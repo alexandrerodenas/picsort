@@ -1,4 +1,5 @@
 import os
+from typing import List
 
 import yaml
 from pydantic import BaseModel
@@ -11,6 +12,7 @@ class AppConfig(BaseModel):
     tesseract_path: str
     num_cores: int
     analysis_blurriness_threshold: int
+    ignored_columns_in_output: List[str]
 
 
 def load_config(file_path):

@@ -1,9 +1,6 @@
 import logging
 
-import cv2
-import numpy as np
 import pandas as pd
-import pytesseract
 from joblib import Parallel, delayed
 
 from src.analysis.image_analyzer import ImageAnalyzer

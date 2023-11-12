@@ -1,13 +1,7 @@
 import logging
 import torch
-from torchvision import models, transforms
-from PIL import Image
-import requests
 import pandas as pd
-from PIL.Image import Image
 from joblib import Parallel, delayed
-from torchvision import models, transforms
-from torchvision.models import ResNet50_Weights
 
 from src.model import get_model_and_classes, to_image_tensor
 from src.shared.dataframe_utils import vertical_concat
