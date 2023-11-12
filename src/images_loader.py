@@ -11,8 +11,8 @@ class ImageDataLoader:
     def __init__(self, input_dir):
         self.input_dir = input_dir
 
-    def _create_image_dataframe(self, image_dir):
-        image_list = self._get_images_paths(image_dir)
+    def create_image_dataframe(self):
+        image_list = self._get_images_paths(self.input_dir)
         logging.info(f"Looking over {len(image_list)} images")
         df = pd.DataFrame(columns=['path', 'content'])
 
@@ -48,6 +48,3 @@ class ImageDataLoader:
         except Exception as e:
             logging.error(f"Error loading image {image_path}: {str(e)}")
             return None
-
-    def get_dataframe(self):
-        return self._create_image_dataframe(self.input_dir)
