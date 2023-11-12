@@ -5,3 +5,6 @@ tesseract_path: "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 num_cores: 4
 analysis_blurriness_threshold: 100
 ignored_columns_in_output: ["content", "grayscale"]
+sort_conditions:
+  blurriness_threshold: 80
+  white_percentage_threshold: 25

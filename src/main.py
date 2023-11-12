@@ -10,7 +10,5 @@ if __name__ == '__main__':
     create_directory(config.output_directory)
 
     SortPipeline.run_in_parallel(
-        config.input_directory,
-        config.tesseract_path,
-        config.num_cores
+        config
     )

@@ -13,6 +13,7 @@ class PreAnalyzer:
 
     def run(self, row) -> ImagePreAnalysis:
         image_pre_analysis = ImagePreAnalysis(
+            row["path"],
             self._get_blur_level(row["grayscale"]),
             self._get_white_percentage(row["grayscale"]),
             self._get_text(row["content"])

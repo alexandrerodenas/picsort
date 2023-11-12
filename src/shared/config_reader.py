@@ -5,6 +5,11 @@ import yaml
 from pydantic import BaseModel
 
 
+class SortConditions(BaseModel):
+    blurriness_threshold: int
+    white_percentage_threshold: int
+
+
 class AppConfig(BaseModel):
     input_directory: str
     output_directory: str
@@ -13,6 +18,7 @@ class AppConfig(BaseModel):
     num_cores: int
     analysis_blurriness_threshold: int
     ignored_columns_in_output: List[str]
+    sort_conditions: SortConditions
 
 
 def load_config(file_path):
