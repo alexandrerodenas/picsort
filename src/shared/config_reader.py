@@ -13,6 +13,7 @@ class SortConditions(BaseModel):
 
 class AppConfig(BaseModel):
     input_directory: str
+    image_extensions: List[str]
     output_directory: str
     logging_level: str
     tesseract_path: str

@@ -1,18 +1,17 @@
 import logging
 import os
-import cv2
-import numpy as np
-import pandas as pd
 
-IMAGE_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.gif', '.bmp')
+import cv2
+import pandas as pd
 
 
 class ImageDataLoader:
-    def __init__(self, input_dir):
+    def __init__(self, input_dir, image_extensions):
         self.input_dir = input_dir
+        self.image_extensions = image_extensions
 
     def create_image_dataframe(self) -> pd.DataFrame:
-        image_list = self._get_images_paths(self.input_dir)
+        image_list = self._extract_paths()
         logging.info(f"Looking over {len(image_list)} images")
         df = pd.DataFrame(columns=['path', 'content'])
 
@@ -25,15 +24,14 @@ class ImageDataLoader:
         logging.info(f"Loaded {len(df)} images into the DataFrame")
         return df
 
-    @staticmethod
-    def _get_images_paths(image_dir):
+    def _extract_paths(self):
         logging.info(f"Loading images")
         image_list = []
 
-        for root, _, files in os.walk(image_dir):
+        for root, _, files in os.walk(self.input_dir):
             logging.debug(f"Analysing {files}")
             for image_file in files:
-                if (image_file.lower().endswith(IMAGE_EXTENSIONS)
+                if (image_file.lower().endswith(self.image_extensions)
                         and not os.path.basename(image_file).lower().startswith("_")):
                     image_path = os.path.join(root, image_file)
                     image_list.append(image_path)

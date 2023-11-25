@@ -1,5 +1,6 @@
 input_directory: "../input"
 output_directory: "../output"
+image_extensions: ['jpg', 'jpeg', 'png', '.bmp', '.gif']
 logging_level: "INFO"
 tesseract_path: "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 num_cores: 4

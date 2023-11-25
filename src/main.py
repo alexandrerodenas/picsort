@@ -1,7 +1,7 @@
 from src.shared.config_reader import load_config
 from src.shared.file_utils import create_directory
 from src.shared.logger import setup_logger
-from src.sorting.sort_pipeline import SortPipeline
+from src.sort.sort_pipeline import SortPipeline
 
 if __name__ == '__main__':
     config = load_config('/../../config.yaml')
@@ -9,6 +9,4 @@ if __name__ == '__main__':
 
     create_directory(config.output_directory)
 
-    SortPipeline.run_in_parallel(
-        config
-    )
+    SortPipeline(config).run_in_parallel()
