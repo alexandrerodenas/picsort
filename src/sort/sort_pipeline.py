@@ -18,6 +18,7 @@ class SortPipeline:
         self.tesseract_path = config.tesseract_path
         self.num_cores = config.num_cores
         self.sort_conditions = config.sort_conditions
+        self.predictions_number = config.predictions_number
 
     def run_in_parallel(self):
         dataframe = ImageDataLoader(
@@ -36,7 +37,7 @@ class SortPipeline:
         )
 
         (valid_paths_for_predicted_images,
-         invalid_paths_for_predicted_images) = self._filter_images_based_on_predicted_class(
+         invalid_paths_for_predicted_images) = self._filter_images_based_on_predicted_classes(
             predictions
         )
 
@@ -56,6 +57,7 @@ class SortPipeline:
             delayed(
                 pre_analyzer.run
             )(row) for index, row in dataframe.iterrows())
+        logging.debug(self._log_objects(pre_analyzed_images))
         logging.info("Pre analysis done")
         return pre_analyzed_images
 
@@ -80,7 +82,7 @@ class SortPipeline:
 
     def _run_inference_on_valid_images(self, valid_pre_analyzed_images) -> List[PredictionForPath]:
         logging.info(f"Inference starting")
-        inference = Inference()
+        inference = Inference(self.predictions_number)
         valid_image_paths = [
             valid_pre_analyzed_image.get_path() for valid_pre_analyzed_image in valid_pre_analyzed_images
         ]
@@ -88,15 +90,16 @@ class SortPipeline:
             delayed(inference.get_prediction_for_path)(valid_image_path)
             for valid_image_path in valid_image_paths
         )
+        logging.debug(self._log_objects(predictions))
         logging.info(f"Inference over")
         return predictions
 
-    def _filter_images_based_on_predicted_class(self, predictions_for_path):
+    def _filter_images_based_on_predicted_classes(self, predictions_for_path):
         logging.info("Filtering images based on predicted class")
         valid_paths = []
         invalid_paths = []
         for prediction_for_path in predictions_for_path:
-            if prediction_for_path.prediction in self.sort_conditions.trash_classes:
+            if bool(set(prediction_for_path.predicted_classes) & set(self.sort_conditions.trash_classes)):
                 invalid_paths.append(prediction_for_path.path)
             else:
                 valid_paths.append(prediction_for_path.path)
@@ -106,3 +109,7 @@ class SortPipeline:
             invalids: {len(invalid_paths)}
         """)
         return valid_paths, invalid_paths
+
+    @staticmethod
+    def _log_objects(objects):
+        return ', '.join(map(lambda obj: str(obj), objects))

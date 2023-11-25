@@ -5,20 +5,21 @@ from torchvision.models import ResNet50_Weights
 
 
 class PredictionForPath:
-    def __init__(self, path, prediction):
+    def __init__(self, path, predicted_classes):
         self.path = path
-        self.prediction = prediction
+        self.predicted_classes = predicted_classes
 
     def get_path(self):
         return self.path
 
-    def get_prediction(self):
-        return self.prediction
+    def get_predicted_classes(self):
+        return self.predicted_classes
 
 
 class Inference:
-    def __init__(self):
+    def __init__(self, predictions_number):
         self.model, self.classes = self._get_model_and_classes()
+        self.predictions_number = predictions_number
 
     def get_prediction_for_path(self, path: str) -> PredictionForPath:
         img_tensor = self._to_image_tensor(path)
@@ -26,10 +27,12 @@ class Inference:
         with torch.no_grad():
             output = self.model(img_tensor)
 
-        _, predicted_idx = torch.max(output, 1)
+        _, predicted_idx = torch.topk(output, self.predictions_number)
+        top_classes = [self.classes[idx.item()] for idx in predicted_idx[0]]
+
         return PredictionForPath(
             path,
-            self.classes[predicted_idx.item()]
+            top_classes
         )
 
     @staticmethod

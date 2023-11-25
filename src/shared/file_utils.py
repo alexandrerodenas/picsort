@@ -12,9 +12,11 @@ def _delete_directory(directory_path):
 
 
 def create_directory(directory_path):
-    _delete_directory(directory_path)
-    os.makedirs(directory_path)
-    logging.info(f"Directory '{directory_path}' created successfully.")
+    if os.path.exists(directory_path):
+        logging.warning(f"Directory '{directory_path}' already exists. Skipping creation.")
+    else:
+        os.makedirs(directory_path)
+        logging.info(f"Directory '{directory_path}' created successfully.")
 
 
 def move_files(file_paths, destination_directory):

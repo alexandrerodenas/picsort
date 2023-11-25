@@ -15,13 +15,13 @@ class SortConditions(BaseModel):
 class AppConfig(BaseModel):
     input_directory: str
     image_extensions: List[str]
+    move_files: bool
     output_directory: str
     logging_level: str
     tesseract_path: str
     num_cores: int
-    analysis_blurriness_threshold: int
-    ignored_columns_in_output: List[str]
     sort_conditions: SortConditions
+    predictions_number: int
 
 
 def load_config(file_path):

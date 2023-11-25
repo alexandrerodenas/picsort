@@ -18,7 +18,8 @@ def run():
     setup_logger(config.logging_level)
     create_directory(config.output_directory)
     valid_images_paths, invalid_images_paths = SortPipeline(config).run_in_parallel()
-    _move_images(config, valid_images_paths, invalid_images_paths)
+    if config.move_files:
+        _move_images(config, valid_images_paths, invalid_images_paths)
 
 
 if __name__ == '__main__':
