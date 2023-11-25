@@ -3,7 +3,7 @@ from typing import List
 
 from joblib import Parallel, delayed
 
-from src.inference.inference import Inference
+from src.inference.inference import Inference, PredictionForPath
 from src.load.images_loader import ImageDataLoader
 from src.pre_analysis.image_analysis import ImagePreAnalysis
 from src.pre_analysis.pre_analyzer import PreAnalyzer
@@ -30,7 +30,7 @@ class SortPipeline:
             pre_analyzed_images
         )
 
-        predicted_classes = self._run_inference_on_valid_images(
+        predictions = self._run_inference_on_valid_images(
             valid_pre_analyzed_images
         )
 
@@ -63,15 +63,15 @@ class SortPipeline:
         """)
         return valid_pre_analyzed_images, invalid_pre_analyzed_images
 
-    def _run_inference_on_valid_images(self, valid_pre_analyzed_images) -> List[str]:
+    def _run_inference_on_valid_images(self, valid_pre_analyzed_images) -> List[PredictionForPath]:
         logging.info(f"Inference starting")
         inference = Inference()
         valid_image_paths = [
             valid_pre_analyzed_image.get_path() for valid_pre_analyzed_image in valid_pre_analyzed_images
         ]
-        predicted_classes = Parallel(n_jobs=self.num_cores)(
-            delayed(inference.get_top_predicted_class)(valid_image_path)
+        predictions = Parallel(n_jobs=self.num_cores)(
+            delayed(inference.get_prediction_for_path)(valid_image_path)
             for valid_image_path in valid_image_paths
         )
         logging.info(f"Inference over")
-        return predicted_classes
+        return predictions
