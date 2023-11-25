@@ -35,9 +35,20 @@ class SortPipeline:
             valid_pre_analyzed_images
         )
 
-        self._filter_images_based_on_predicted_class(
+        (valid_paths_for_predicted_images,
+         invalid_paths_for_predicted_images) = self._filter_images_based_on_predicted_class(
             predictions
         )
+
+        invalid_images_paths = (list(map(lambda _: _.get_path(), invalid_pre_analyzed_images))
+                                + invalid_paths_for_predicted_images)
+        valid_images_paths = (list(map(lambda _: _.get_path(), valid_pre_analyzed_images))
+                              + valid_paths_for_predicted_images)
+
+        logging.debug(f"Invalids:{invalid_images_paths}")
+        logging.debug(f"Valids: {valid_images_paths}")
+
+        return valid_images_paths, invalid_images_paths
 
     def _get_pre_analyzed_images(self, dataframe) -> List[ImagePreAnalysis]:
         logging.info("Pre analysis begins")
@@ -83,15 +94,16 @@ class SortPipeline:
 
     def _filter_images_based_on_predicted_class(self, predictions_for_path):
         logging.info("Filtering images based on predicted class")
-        valid_images = []
-        invalid_images = []
+        valid_paths = []
+        invalid_paths = []
         for prediction_for_path in predictions_for_path:
             if prediction_for_path.prediction in self.sort_conditions.trash_classes:
-                invalid_images.append(prediction_for_path.path)
+                invalid_paths.append(prediction_for_path.path)
             else:
-                valid_images.append(prediction_for_path.path)
+                valid_paths.append(prediction_for_path.path)
         logging.info(f"""
             Filtering process done
-            valids: {len(valid_images)}
-            invalids: {len(invalid_images)}
+            valids: {len(valid_paths)}
+            invalids: {len(invalid_paths)}
         """)
+        return valid_paths, invalid_paths

@@ -1,3 +1,6 @@
+import logging
+
+
 class DataFrameWriter:
     def __init__(self, dataframe, excluded_columns=None):
         if excluded_columns is None:
@@ -8,7 +11,7 @@ class DataFrameWriter:
         file_path = output_dir + "/dataframe.csv"
         try:
             self.dataframe.to_csv(file_path, index=False)
-            print(f"DataFrame successfully written to {file_path}")
+            logging.info(f"DataFrame successfully written to {file_path}")
         except Exception as e:
-            print(f"Error writing DataFrame to {file_path}: {str(e)}")
+            logging.error(f"Error writing DataFrame to {file_path}: {str(e)}")
 

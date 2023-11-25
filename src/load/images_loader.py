@@ -22,7 +22,7 @@ class ImageDataLoader:
                 new_row = {'path': image_path, 'content': image_content, 'grayscale': image_grayscale_encoded}
                 df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
 
-        logging.info(f"Loaded {len(df)} images into the DataFrame")
+        logging.info(f"Loaded {len(df)} images into dataFrame")
         return df
 
     def _extract_paths(self):

@@ -32,7 +32,7 @@ class PreAnalyzer:
             laplacian_var = cv2.Laplacian(image_grayscale, cv2.CV_64F).var()
             return int(laplacian_var)
         except Exception as e:
-            print(f"Error analyzing image: {str(e)}")
+            logging.error(f"Error analyzing image: {str(e)}")
 
     def _get_text(self, image_content) -> str:
         pytesseract.tesseract_cmd = self.tesseract_path
