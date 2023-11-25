@@ -15,24 +15,12 @@ class SortPipeline:
     def run_in_parallel(config: AppConfig):
         dataframe = ImageDataLoader(config.input_directory).create_image_dataframe()
 
-        logging.info("Pre analysis begins")
-        pre_analyzer = PreAnalyzer(config.tesseract_path)
-        pre_analyzed_images: List[ImagePreAnalysis] = Parallel(n_jobs=config.num_cores)(
-            delayed(
-                pre_analyzer.run
-            )(row) for index, row in dataframe.iterrows())
-        logging.info("Pre analysis done")
+        pre_analyzed_images = SortPipeline._get_pre_analyzed_images(config, dataframe)
 
-        logging.info("Filtering out based on pre analysis")
-        valid_pre_analyzed_images = [
-            pre_analyzed_image for pre_analyzed_image in pre_analyzed_images
-            if not pre_analyzed_image.is_invalid_picture(
-                config.sort_conditions.blurriness_threshold,
-                config.sort_conditions.white_percentage_threshold
-            )
-        ]
-        logging.info("Filtering process done")
-
+        valid_pre_analyzed_images, invalid_pre_analyzed_images = SortPipeline._filter_images_based_on_sort_conditions(
+            config,
+            pre_analyzed_images
+        )
 
         logging.info(f"Inference starting")
         inference = Inference()
@@ -40,3 +28,27 @@ class SortPipeline:
             delayed(inference.get_top_predicted_class)(row) for index, row in
             dataframe.iterrows())
         logging.info(f"Inference over")
+
+    @staticmethod
+    def _filter_images_based_on_sort_conditions(config, pre_analyzed_images):
+        logging.info("Filtering out based on pre analysis")
+        valid_pre_analyzed_images = []
+        invalid_pre_analyzed_images = []
+        for pre_analyzed_image in pre_analyzed_images:
+            if pre_analyzed_image.is_valid_picture(config.sort_conditions):
+                valid_pre_analyzed_images.append(pre_analyzed_image)
+            else:
+                invalid_pre_analyzed_images.append(pre_analyzed_image)
+        logging.info("Filtering process done")
+        return valid_pre_analyzed_images, invalid_pre_analyzed_images
+
+    @staticmethod
+    def _get_pre_analyzed_images(config, dataframe):
+        logging.info("Pre analysis begins")
+        pre_analyzer = PreAnalyzer(config.tesseract_path)
+        pre_analyzed_images: List[ImagePreAnalysis] = Parallel(n_jobs=config.num_cores)(
+            delayed(
+                pre_analyzer.run
+            )(row) for index, row in dataframe.iterrows())
+        logging.info("Pre analysis done")
+        return pre_analyzed_images
