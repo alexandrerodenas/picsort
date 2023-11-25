@@ -8,6 +8,9 @@ class ImagePreAnalysis:
         self.text = text
         self.path = path
 
+    def get_path(self):
+        return self.path
+
     def is_valid_picture(self, sort_conditions: SortConditions):
         return (
                 len(self.text) <= sort_conditions.text_threshold

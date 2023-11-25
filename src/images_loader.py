@@ -11,7 +11,7 @@ class ImageDataLoader:
     def __init__(self, input_dir):
         self.input_dir = input_dir
 
-    def create_image_dataframe(self):
+    def create_image_dataframe(self) -> pd.DataFrame:
         image_list = self._get_images_paths(self.input_dir)
         logging.info(f"Looking over {len(image_list)} images")
         df = pd.DataFrame(columns=['path', 'content'])
