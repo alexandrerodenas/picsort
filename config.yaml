@@ -6,9 +6,9 @@ image_extensions:
   - 'png'
   - '.bmp'
   - '.gif'
-logging_level: "DEBUG"
+logging_level: "INFO"
 tesseract_path: "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
-num_cores: 2
+num_cores: 7
 analysis_blurriness_threshold: 100
 ignored_columns_in_output:
   - "content"

@@ -42,8 +42,7 @@ class SortPipeline:
 
         invalid_images_paths = (list(map(lambda _: _.get_path(), invalid_pre_analyzed_images))
                                 + invalid_paths_for_predicted_images)
-        valid_images_paths = (list(map(lambda _: _.get_path(), valid_pre_analyzed_images))
-                              + valid_paths_for_predicted_images)
+        valid_images_paths = valid_paths_for_predicted_images
 
         logging.debug(f"Invalids:{invalid_images_paths}")
         logging.debug(f"Valids: {valid_images_paths}")

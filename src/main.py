@@ -21,5 +21,5 @@ if __name__ == '__main__':
 
     valid_images_paths, invalid_images_paths = SortPipeline(config).run_in_parallel()
 
-    #move_images()
+    move_images()
 
