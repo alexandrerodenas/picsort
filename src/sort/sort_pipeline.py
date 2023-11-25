@@ -7,11 +7,12 @@ from src.inference.inference import Inference, PredictionForPath
 from src.load.images_loader import ImageDataLoader
 from src.pre_analysis.image_analysis import ImagePreAnalysis
 from src.pre_analysis.pre_analyzer import PreAnalyzer
+from src.shared.config_reader import AppConfig
 
 
 class SortPipeline:
 
-    def __init__(self, config):
+    def __init__(self, config: AppConfig):
         self.input_directory = config.input_directory
         self.image_extensions = config.image_extensions
         self.tesseract_path = config.tesseract_path
@@ -34,6 +35,10 @@ class SortPipeline:
             valid_pre_analyzed_images
         )
 
+        self._filter_images_based_on_predicted_class(
+            predictions
+        )
+
     def _get_pre_analyzed_images(self, dataframe) -> List[ImagePreAnalysis]:
         logging.info("Pre analysis begins")
         pre_analyzer = PreAnalyzer(self.tesseract_path)
@@ -48,7 +53,7 @@ class SortPipeline:
             self,
             pre_analyzed_images
     ) -> [List[ImagePreAnalysis], List[ImagePreAnalysis]]:
-        logging.info("Filtering out based on pre analysis")
+        logging.info("Filtering images based on pre analysis")
         valid_pre_analyzed_images = []
         invalid_pre_analyzed_images = []
         for pre_analyzed_image in pre_analyzed_images:
@@ -58,8 +63,8 @@ class SortPipeline:
                 invalid_pre_analyzed_images.append(pre_analyzed_image)
         logging.info(f"""
             Filtering process done
-            valid: {len(valid_pre_analyzed_images)}
-            invalid: {len(invalid_pre_analyzed_images)}
+            valids: {len(valid_pre_analyzed_images)}
+            invalids: {len(invalid_pre_analyzed_images)}
         """)
         return valid_pre_analyzed_images, invalid_pre_analyzed_images
 
@@ -75,3 +80,18 @@ class SortPipeline:
         )
         logging.info(f"Inference over")
         return predictions
+
+    def _filter_images_based_on_predicted_class(self, predictions_for_path):
+        logging.info("Filtering images based on predicted class")
+        valid_images = []
+        invalid_images = []
+        for prediction_for_path in predictions_for_path:
+            if prediction_for_path.prediction in self.sort_conditions.trash_classes:
+                invalid_images.append(prediction_for_path.path)
+            else:
+                valid_images.append(prediction_for_path.path)
+        logging.info(f"""
+            Filtering process done
+            valids: {len(valid_images)}
+            invalids: {len(invalid_images)}
+        """)

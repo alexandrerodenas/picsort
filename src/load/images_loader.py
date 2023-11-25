@@ -1,14 +1,15 @@
 import logging
 import os
+from typing import List, Tuple
 
 import cv2
 import pandas as pd
 
 
 class ImageDataLoader:
-    def __init__(self, input_dir, image_extensions):
+    def __init__(self, input_dir: str, image_extensions: List[str]):
         self.input_dir = input_dir
-        self.image_extensions = image_extensions
+        self.image_extensions = tuple(image_extensions)
 
     def create_image_dataframe(self) -> pd.DataFrame:
         image_list = self._extract_paths()

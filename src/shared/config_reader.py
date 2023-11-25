@@ -9,6 +9,7 @@ class SortConditions(BaseModel):
     text_threshold: int
     blurriness_threshold: int
     white_percentage_threshold: int
+    trash_classes: List[str]
 
 
 class AppConfig(BaseModel):

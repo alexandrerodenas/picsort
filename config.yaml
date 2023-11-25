@@ -1,12 +1,23 @@
 input_directory: "../input"
 output_directory: "../output"
-image_extensions: ['jpg', 'jpeg', 'png', '.bmp', '.gif']
+image_extensions:
+  - 'jpg'
+  - 'jpeg'
+  - 'png'
+  - '.bmp'
+  - '.gif'
 logging_level: "INFO"
 tesseract_path: "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 num_cores: 4
 analysis_blurriness_threshold: 100
-ignored_columns_in_output: ["content", "grayscale"]
+ignored_columns_in_output:
+  - "content"
+  - "grayscale"
 sort_conditions:
   text_threshold: 0
   blurriness_threshold: 80
   white_percentage_threshold: 25
+  trash_classes:
+    - "menu"
+    - "web site"
+    - "envelope"
