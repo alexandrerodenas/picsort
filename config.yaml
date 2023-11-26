@@ -7,13 +7,13 @@ image_extensions:
   - 'png'
   - '.bmp'
   - '.gif'
-logging_level: "DEBUG"
+logging_level: "INFO"
 tesseract_path: "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 num_cores: 7
-predictions_number: 3
+number_of_class_to_predict: 3
 validation_conditions:
-  text_threshold: 0
-  blurriness_threshold: 80
+  text_threshold: 300
+  blurriness_threshold: 2000
   white_percentage_threshold: 25
   trash_classes:
     - "menu"

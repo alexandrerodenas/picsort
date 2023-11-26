@@ -17,7 +17,7 @@ class ValidationPipeline:
         self.tesseract_path = config.tesseract_path
         self.num_cores = config.num_cores
         self.sort_conditions = config.validation_conditions
-        self.predictions_number = config.predictions_number
+        self.predictions_number = config.number_of_class_to_predict
 
     def run_in_parallel(self):
         image_paths = ImagesLoader(
@@ -40,19 +40,19 @@ class ValidationPipeline:
 
         white_percentage = PreAnalyzer.get_white_percentage(image_grayscale)
         if white_percentage > self.sort_conditions.white_percentage_threshold:
-            return InvalidPath(image_path, f"White percentage: {white_percentage}")
+            return InvalidPath(image_path, "white", f"White percentage: {white_percentage}")
 
         blurriness_level = PreAnalyzer.get_blur_level(image_grayscale)
         if blurriness_level > self.sort_conditions.blurriness_threshold:
-            return InvalidPath(image_path, f"Blurriness level: {blurriness_level}")
+            return InvalidPath(image_path, "blurriness", f"Blurriness level: {blurriness_level}")
 
         text_length = len(PreAnalyzer.get_text(image_content, self.tesseract_path))
         if text_length > self.sort_conditions.text_threshold:
-            return InvalidPath(image_path, f"Text length: {text_length}")
+            return InvalidPath(image_path, "text", f"Text length: {text_length}")
 
         else:
             predictions_for_path = inference.get_predictions_for_path(image_path)
             if predictions_for_path.has_trash_class(self.sort_conditions.trash_classes):
-                return InvalidPath(image_path, f"Trash class detected: {predictions_for_path.predicted_classes}")
+                return InvalidPath(image_path, "nature", f"Trash class detected: {predictions_for_path.predicted_classes}")
             else:
                 return ValidPath(image_path)

@@ -21,7 +21,7 @@ class AppConfig(BaseModel):
     tesseract_path: str
     num_cores: int
     validation_conditions: ValidationConditions
-    predictions_number: int
+    number_of_class_to_predict: int
 
 
 def load_config(file_path):
