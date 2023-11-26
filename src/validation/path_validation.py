@@ -32,30 +32,25 @@ class PathValidationsResultPrinter:
     def print(path_validations: List[PathValidation]):
         valid_paths = [path_validation for path_validation in path_validations if path_validation.valid]
         invalid_paths = [path_validation for path_validation in path_validations if not path_validation.valid]
-        logging.info(f"""
-            Validation done
-            valids: {len(valid_paths)}
-            invalids: {len(invalid_paths)}""")
-
         PathValidationsResultPrinter._print_valid_paths(valid_paths)
         PathValidationsResultPrinter._print_invalid_paths(invalid_paths)
 
     @staticmethod
     def _print_invalid_paths(invalid_paths):
         invalid_paths_by_reason = {}
+        logging.info(f"Invalid paths ({len(invalid_paths)}):")
         for invalid_path in invalid_paths:
             reason = invalid_path.reason
             if reason not in invalid_paths_by_reason:
                 invalid_paths_by_reason[reason] = []
             invalid_paths_by_reason[reason].append(invalid_path)
-        logging.info("Invalid paths:")
         for reason, paths in invalid_paths_by_reason.items():
-            logging.info(f"Reason: {reason}")
+            logging.info(f"Reason ({len(paths)}): {reason}")
             for invalid_path in paths:
                 logging.info(f"  {invalid_path.path}: {invalid_path.reason_msg}")
 
     @staticmethod
     def _print_valid_paths(valid_paths):
-        logging.info("Valid paths: ")
+        logging.info(f"Valid paths ({len(valid_paths)}): ")
         for valid_path in valid_paths:
             logging.info(valid_path.path)

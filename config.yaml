@@ -1,21 +1,24 @@
 input_directory: "../input"
 output_directory: "../output"
-move_files: false
+move_files: true
 image_extensions:
   - 'jpg'
   - 'jpeg'
   - 'png'
   - '.bmp'
   - '.gif'
-logging_level: "INFO"
+logging_level: "DEBUG"
 tesseract_path: "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 num_cores: 7
 number_of_class_to_predict: 3
 validation_conditions:
-  text_threshold: 300
+  text_threshold: 400
   blurriness_threshold: 2000
   white_percentage_threshold: 25
   trash_classes:
     - "menu"
     - "web site"
     - "envelope"
+    - 'computer keyboard'
+    - 'hand-held computer'
+    - 'typewriter keyboard'

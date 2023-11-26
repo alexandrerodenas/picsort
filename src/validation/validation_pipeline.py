@@ -46,9 +46,10 @@ class ValidationPipeline:
         if blurriness_level > self.sort_conditions.blurriness_threshold:
             return InvalidPath(image_path, "blurriness", f"Blurriness level: {blurriness_level}")
 
-        text_length = len(PreAnalyzer.get_text(image_content, self.tesseract_path))
+        text = PreAnalyzer.get_text(image_content, self.tesseract_path)
+        text_length = len(text)
         if text_length > self.sort_conditions.text_threshold:
-            return InvalidPath(image_path, "text", f"Text length: {text_length}")
+            return InvalidPath(image_path, "text", f"Text length: {text_length} ({text})")
 
         else:
             predictions_for_path = inference.get_predictions_for_path(image_path)

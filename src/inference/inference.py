@@ -1,3 +1,5 @@
+import logging
+
 import torch
 from PIL import Image
 from torchvision import models, transforms
@@ -26,7 +28,6 @@ class Inference:
 
         _, predicted_idx = torch.topk(output, self.predictions_number)
         top_classes = [self.classes[idx.item()] for idx in predicted_idx[0]]
-
         return PredictionsForPath(
             path,
             top_classes
