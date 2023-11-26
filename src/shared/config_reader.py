@@ -5,7 +5,7 @@ import yaml
 from pydantic import BaseModel
 
 
-class SortConditions(BaseModel):
+class ValidationConditions(BaseModel):
     text_threshold: int
     blurriness_threshold: int
     white_percentage_threshold: int
@@ -20,7 +20,7 @@ class AppConfig(BaseModel):
     logging_level: str
     tesseract_path: str
     num_cores: int
-    sort_conditions: SortConditions
+    validation_conditions: ValidationConditions
     predictions_number: int
 
 

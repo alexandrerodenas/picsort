@@ -1,31 +1,16 @@
 import logging
 import os
-from typing import List, Tuple
+from typing import List
 
 import cv2
-import pandas as pd
 
 
-class ImageDataLoader:
+class ImagesLoader:
     def __init__(self, input_dir: str, image_extensions: List[str]):
         self.input_dir = input_dir
         self.image_extensions = tuple(image_extensions)
 
-    def create_image_dataframe(self) -> pd.DataFrame:
-        image_list = self._extract_paths()
-        logging.info(f"Looking over {len(image_list)} images")
-        df = pd.DataFrame(columns=['path', 'content'])
-
-        for image_path in image_list:
-            image_content, image_grayscale_encoded = self._read_image_content(image_path)
-            if image_content is not None or image_grayscale_encoded is not None:
-                new_row = {'path': image_path, 'content': image_content, 'grayscale': image_grayscale_encoded}
-                df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
-
-        logging.info(f"Loaded {len(df)} images into dataFrame")
-        return df
-
-    def _extract_paths(self):
+    def extract_paths(self):
         logging.info(f"Loading images")
         image_list = []
 

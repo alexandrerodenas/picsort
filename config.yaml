@@ -11,7 +11,7 @@ logging_level: "DEBUG"
 tesseract_path: "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 num_cores: 7
 predictions_number: 3
-sort_conditions:
+validation_conditions:
   text_threshold: 0
   blurriness_threshold: 80
   white_percentage_threshold: 25
